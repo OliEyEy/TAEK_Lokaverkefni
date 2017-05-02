@@ -9,6 +9,7 @@ int takkiStadaAdur = LOW;
 int hreyfipinniStada = 0;
 int teljari = 20;
 int mode = 0;
+int stopp = 0;
 int led = 8;
 int x = 0;
 const int TrigPin = 2;//Trig attach to pin2
@@ -35,9 +36,11 @@ void loop() {
   cm = (int(cm * 100.0))/100.0;
   if(cm <= 20) {
       digitalWrite(led,HIGH);
+      stopp=1;
     }
     else if(cm > 20) {
       digitalWrite(led,LOW);
+      stopp=0;
     }
   if(mode==1) {
     hreyfipinniStada = analogRead(hreyfipinni);
@@ -57,17 +60,21 @@ void loop() {
     }
   }
   else if(mode==0) {
-    
-    if(teljari==180) {
-      x=1;
+    if(stopp==1) {
+      teljari=teljari;
     }
-    if(teljari==20) {
-      x=0;
-    }if(x==1) {
-      teljari--;
-    }
-    if(x==0) {
-      teljari++;
+    else {
+      if(teljari==180) {
+        x=1;
+      }
+      if(teljari==20) {
+        x=0;
+      }if(x==1) {
+        teljari--;
+      }
+      if(x==0) {
+        teljari++;
+      }
     }
   }
   takkiStada = digitalRead(takki);
@@ -80,6 +87,7 @@ void loop() {
     }
   }
   takkiStadaAdur = takkiStada;
+  
   myservo.write(teljari);
   delay(15);
 } 
